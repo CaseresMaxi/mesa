@@ -1,0 +1,40 @@
+{
+  "$schema": "../../schemas/rules.schema.json",
+  "victoryVp": 20,
+  "handLimit": 5,
+  "startingHand": 3,
+  "drawPerTurn": 1,
+  "battle": { "hitOn": 4, "undefendedBonus": 1, "vpPerStructure": 1 },
+  "effort": { "suit": "hype" },
+  "logLimit": 300,
+  "terms": {
+    "node": "mercado",
+    "nodes": "mercados",
+    "vp": "PV",
+    "turnStart": "Planning",
+    "actions": "sprint",
+    "close": "Cierre",
+    "battle": "benchmark",
+    "move": "desplegar",
+    "recruit": "contratar",
+    "build": "construir",
+    "token": "lanzamiento",
+    "effort": "crunch"
+  },
+  "texts": {
+    "move": "Despliega {n} {unit} de {from} a {to}.",
+    "recruit": "Contrata {n} {unit} en {node}.",
+    "build": "Construye un {what} en {node}.",
+    "token": "Lanza un producto en {node}.",
+    "effort": "Crunch: quema una carta de Hype y gana 1 acción.",
+    "endTurn": "Cierra el sprint.",
+    "whyKills": "hallazgos de auditoría",
+    "nomadMove": "Toma un café y se muda a {node}.",
+    "nomadDraw": "Scrapea un dataset: roba 1 carta.",
+    "nomadFinetune": "Fine-tunea su modelo con {card}: nuevo componente ({item}).",
+    "whyFinetune": "fine-tune publicado",
+    "nomadAid": "Ayuda a {target} en el foro: le regala una carta (quema {item}).",
+    "nomadEffort": "Crunch: quema una carta de Hype y recupera 1 componente.",
+    "nomadRefresh": "Planning — Dormir: recupera {n} componente(s)."
+  }
+}

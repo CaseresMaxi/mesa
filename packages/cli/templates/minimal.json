@@ -1,0 +1,80 @@
+{
+  "pack": {
+    "$schema": "../../schemas/pack.schema.json",
+    "id": "nuevo",
+    "name": "Nuevo juego",
+    "version": "0.1.0",
+    "description": "Juego de control de área creado con mesa.",
+    "language": "es",
+    "players": { "min": 2, "max": 2 },
+    "balance": { "games": 200, "factionsPerGame": 2 }
+  },
+  "rules": {
+    "$schema": "../../schemas/rules.schema.json",
+    "victoryVp": 15,
+    "handLimit": 5,
+    "startingHand": 3,
+    "effort": { "suit": "comodin" },
+    "terms": { "node": "región", "nodes": "regiones" }
+  },
+  "map": {
+    "$schema": "../../schemas/map.schema.json",
+    "id": "mapa",
+    "name": "Mapa inicial",
+    "terrains": [
+      { "id": "bosque", "name": "Bosque", "color": "#5f9a4a" },
+      { "id": "montana", "name": "Montaña", "color": "#8a7f74" }
+    ],
+    "nodes": [
+      { "id": 0, "name": "Norte", "terrain": "bosque", "slots": 2, "x": -4, "z": -3, "corner": true },
+      { "id": 1, "name": "Centro", "terrain": "montana", "slots": 2, "x": 0, "z": 0 },
+      { "id": 2, "name": "Sur", "terrain": "bosque", "slots": 2, "x": 4, "z": 3, "corner": true },
+      { "id": 3, "name": "Este", "terrain": "montana", "slots": 1, "x": 4, "z": -3 },
+      { "id": 4, "name": "Oeste", "terrain": "montana", "slots": 1, "x": -4, "z": 3 }
+    ],
+    "edges": [[0, 1], [1, 2], [0, 3], [3, 1], [1, 4], [4, 2]],
+    "startCorners": [0, 2],
+    "center": 1
+  },
+  "cards": {
+    "$schema": "../../schemas/cards.schema.json",
+    "suits": [
+      { "id": "bosque", "name": "Bosque", "color": "#5f9a4a" },
+      { "id": "montana", "name": "Montaña", "color": "#8a7f74" },
+      { "id": "comodin", "name": "Comodín", "color": "#c2448f", "wild": true }
+    ],
+    "deck": [
+      { "suit": "bosque", "count": 10, "names": ["Leña", "Hongos"] },
+      { "suit": "montana", "count": 10, "names": ["Piedra", "Hierro"] },
+      { "suit": "comodin", "count": 4, "names": ["Mercader"] }
+    ]
+  },
+  "factions": [
+    {
+      "id": "rojos",
+      "name": "Los Rojos",
+      "short": "Rojos",
+      "color": "#c4532b",
+      "warriors": { "count": 12, "name": "soldados", "singular": "soldado" },
+      "building": { "kind": "fuerte", "name": "Fuerte", "count": 4, "vp": [1, 2, 2, 3] },
+      "recruit": { "amount": 2, "requires": [{ "cond": { "has": "building", "of": "self" }, "error": "Necesitás un fuerte" }] },
+      "setup": [{ "at": "corner", "warriors": 4, "building": true }],
+      "onClose": [{ "vars": { "n": { "count": "nodes", "where": { "ruledBy": "self" } } }, "vp": { "div": [{ "ref": "n" }, 2] }, "why": "{n} regiones (1 cada 2)" }],
+      "summary": ["Reclutan 2 donde tienen fuerte.", "Cierre: +1 PV cada 2 regiones que gobiernan."]
+    },
+    {
+      "id": "azules",
+      "name": "Los Azules",
+      "short": "Azules",
+      "color": "#3b6fb6",
+      "warriors": { "count": 12, "name": "exploradores", "singular": "explorador" },
+      "building": { "kind": "puerto", "name": "Puerto", "count": 4, "vp": [1, 1, 2, 3] },
+      "recruit": { "amount": 2, "requires": [{ "cond": { "has": "building", "of": "self" }, "error": "Necesitás un puerto" }] },
+      "move": { "range": 2 },
+      "setup": [{ "at": "corner", "warriors": 4, "building": true }],
+      "onClose": [{ "vars": { "n": { "count": "nodes", "where": { "all": [{ "ruledBy": "self" }, { "has": "building", "of": "self" }] } } }, "vp": { "ref": "n" }, "why": "{n} puertos seguros" }],
+      "summary": ["Se mueven 2 conexiones.", "Cierre: +1 PV por puerto en región que gobiernan."]
+    }
+  ],
+  "assets": { "$schema": "../../../schemas/assets.schema.json", "auto": true, "entries": [] }
+}

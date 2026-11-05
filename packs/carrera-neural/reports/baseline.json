@@ -1,0 +1,126 @@
+{
+  "pack": "carrera-neural",
+  "games": 300,
+  "factionsPerGame": 4,
+  "finished": 300,
+  "avgTurns": 25.56,
+  "stalls": 0,
+  "factions": {
+    "google": {
+      "played": 200,
+      "wins": 53,
+      "winRate": 0.265,
+      "avgVp": 14.18,
+      "vpSources": {
+        "close:monopolio": 4.6,
+        "build": 8.54,
+        "structures": 1.04
+      },
+      "seatWinRate": [
+        0.18,
+        0.44,
+        0.16,
+        0.28
+      ]
+    },
+    "meta": {
+      "played": 200,
+      "wins": 44,
+      "winRate": 0.22,
+      "avgVp": 15.35,
+      "vpSources": {
+        "build": 3.81,
+        "close:estrellas": 9.54,
+        "special": 1.36,
+        "structures": 0.64
+      },
+      "seatWinRate": [
+        0.14,
+        0.5,
+        0.16,
+        0.08
+      ]
+    },
+    "anthropic": {
+      "played": 200,
+      "wins": 40,
+      "winRate": 0.2,
+      "avgVp": 13.54,
+      "vpSources": {
+        "build": 5.14,
+        "kills": 4.82,
+        "close:benchmark": 1.45,
+        "structures": 1.07,
+        "close:constitucion": 1.07
+      },
+      "seatWinRate": [
+        0.16,
+        0.26,
+        0.16,
+        0.22
+      ]
+    },
+    "openai": {
+      "played": 200,
+      "wins": 39,
+      "winRate": 0.195,
+      "avgVp": 14.71,
+      "vpSources": {
+        "close:usuarios": 14.69,
+        "structures": 0.02
+      },
+      "seatWinRate": [
+        0.14,
+        0.48,
+        0.06,
+        0.1
+      ]
+    },
+    "deepseek": {
+      "played": 200,
+      "wins": 64,
+      "winRate": 0.32,
+      "avgVp": 15.94,
+      "vpSources": {
+        "build": 3.73,
+        "close:precio-bajo": 11.03,
+        "structures": 1.08,
+        "close:disputados": 0.1
+      },
+      "seatWinRate": [
+        0.2,
+        0.58,
+        0.2,
+        0.3
+      ]
+    },
+    "redditor": {
+      "played": 200,
+      "wins": 60,
+      "winRate": 0.3,
+      "avgVp": 16.58,
+      "vpSources": {
+        "finetune": 3.99,
+        "structures": 0.83,
+        "special": 6.69,
+        "close:drama": 5.07
+      },
+      "seatWinRate": [
+        0.34,
+        0.48,
+        0.2,
+        0.18
+      ]
+    }
+  },
+  "seatWinRate": [
+    0.19,
+    0.46,
+    0.16,
+    0.19
+  ],
+  "warnings": [
+    "Asiento 2 gana 46% (esperado ~25%)"
+  ],
+  "ms": 6224
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "../../schemas/cards.schema.json",
+  "suits": [
+    { "id": "datos", "name": "Datos", "color": "#3f8fc4", "icon": "datos" },
+    { "id": "computo", "name": "Cómputo", "color": "#7a7f88", "icon": "computo" },
+    { "id": "talento", "name": "Talento", "color": "#e0a82e", "icon": "talento" },
+    { "id": "hype", "name": "Hype", "color": "#c2448f", "wild": true, "icon": "hype" }
+  ],
+  "deck": [
+    { "suit": "datos", "count": 12, "names": ["Dataset Curado", "Web Scrapeada", "Datos Sintéticos", "Feedback de Usuarios"] },
+    { "suit": "computo", "count": 12, "names": ["Clúster de GPUs", "Chip a Medida", "Créditos de Nube", "Supercomputadora"] },
+    { "suit": "talento", "count": 12, "names": ["Investigadora Estrella", "Paper Viral", "Hackatón", "Becarios"] },
+    { "suit": "hype", "count": 4, "names": ["Demo en Vivo", "Ronda Serie A", "Keynote", "Tendencia Viral"] }
+  ]
+}

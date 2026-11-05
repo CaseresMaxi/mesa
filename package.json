@@ -1,0 +1,16 @@
+{
+  "name": "mesa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @mesa/editor --filter @mesa/play dev",
+    "editor": "pnpm --filter @mesa/editor dev",
+    "play": "pnpm --filter @mesa/play dev",
+    "build": "pnpm --filter @mesa/editor build && pnpm --filter @mesa/play build",
+    "build:games": "pnpm --filter @mesa/play build",
+    "mesa": "node packages/cli/src/main.ts",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "packageManager": "pnpm@10.33.0"
+}

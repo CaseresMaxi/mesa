@@ -1,0 +1,1135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "factions": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]*$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "short": {
+            "type": "string"
+          },
+          "tagline": {
+            "default": "",
+            "type": "string"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "archetype": {
+            "default": "standard",
+            "type": "string",
+            "enum": [
+              "standard",
+              "nomad"
+            ]
+          },
+          "warriors": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "name": {
+                "type": "string"
+              },
+              "singular": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "count",
+              "name",
+              "singular"
+            ],
+            "additionalProperties": false
+          },
+          "building": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "vp": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "name",
+                  "count",
+                  "vp"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "token": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "requires": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "cond": {
+                          "$ref": "#/$defs/__schema0"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cond",
+                        "error"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "kind",
+                  "name",
+                  "count"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "actions": {
+            "default": 3,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "recruit": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "requires": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "cond": {
+                          "$ref": "#/$defs/__schema0"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cond",
+                        "error"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "amount"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "move": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "range": {
+                "default": 1,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "needsRule": {
+                "default": true,
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "battle": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "maxDice": {
+                "default": 3,
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 6
+              },
+              "free": {
+                "default": false,
+                "type": "boolean"
+              },
+              "defenseBonus": {
+                "default": 0,
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "vpPerWarriorKill": {
+                "default": 0,
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "additionalProperties": false
+          },
+          "anyCard": {
+            "default": false,
+            "type": "boolean"
+          },
+          "special": {
+            "default": null,
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "hint": {
+                    "type": "string"
+                  },
+                  "requires": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "cond": {
+                          "$ref": "#/$defs/__schema0"
+                        },
+                        "error": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "cond",
+                        "error"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "effects": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "do": {
+                              "type": "string",
+                              "const": "placeWarriors"
+                            },
+                            "where": {
+                              "$ref": "#/$defs/__schema0"
+                            },
+                            "amount": {
+                              "default": 1,
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 9007199254740991
+                            },
+                            "log": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "do",
+                            "where"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "do": {
+                              "type": "string",
+                              "const": "gainVp"
+                            },
+                            "amount": {
+                              "$ref": "#/$defs/__schema1"
+                            },
+                            "why": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "do",
+                            "amount",
+                            "why"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "do": {
+                              "type": "string",
+                              "const": "drawCards"
+                            },
+                            "amount": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 9007199254740991
+                            },
+                            "log": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "do",
+                            "amount"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "do": {
+                              "type": "string",
+                              "const": "refreshItems"
+                            },
+                            "amount": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 9007199254740991
+                            },
+                            "log": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "do",
+                            "amount"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "do": {
+                              "type": "string",
+                              "const": "convertWarrior"
+                            },
+                            "log": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "do"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "do": {
+                              "type": "string",
+                              "const": "log"
+                            },
+                            "text": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "do",
+                            "text"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "hint"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "setup": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "at": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "corner",
+                        "cornerNeighbors",
+                        "center"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "node": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "node"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "warriors": {
+                  "default": 0,
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "building": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "token": {
+                  "default": false,
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "at"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "onTurnStart": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "do": {
+                      "type": "string",
+                      "const": "placeWarriors"
+                    },
+                    "where": {
+                      "$ref": "#/$defs/__schema0"
+                    },
+                    "amount": {
+                      "default": 1,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "log": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "do",
+                    "where"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "do": {
+                      "type": "string",
+                      "const": "gainVp"
+                    },
+                    "amount": {
+                      "$ref": "#/$defs/__schema1"
+                    },
+                    "why": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "do",
+                    "amount",
+                    "why"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "do": {
+                      "type": "string",
+                      "const": "drawCards"
+                    },
+                    "amount": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "log": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "do",
+                    "amount"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "do": {
+                      "type": "string",
+                      "const": "refreshItems"
+                    },
+                    "amount": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991
+                    },
+                    "log": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "do",
+                    "amount"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "do": {
+                      "type": "string",
+                      "const": "convertWarrior"
+                    },
+                    "log": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "do"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "do": {
+                      "type": "string",
+                      "const": "log"
+                    },
+                    "text": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "do",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "onClose": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                },
+                "vars": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "$ref": "#/$defs/__schema1"
+                  }
+                },
+                "vp": {
+                  "$ref": "#/$defs/__schema1"
+                },
+                "why": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "vp",
+                "why"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "nomad": {
+            "type": "object",
+            "properties": {
+              "items": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9][a-z0-9_-]*$"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "verb": {
+                      "type": "string"
+                    },
+                    "hint": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "verb",
+                    "hint"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "startItems": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "maxItems": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "refreshPerTurn": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "actionItems": {
+                "type": "object",
+                "properties": {
+                  "move": {
+                    "type": "string"
+                  },
+                  "battle": {
+                    "type": "string"
+                  },
+                  "draw": {
+                    "type": "string"
+                  },
+                  "finetune": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "move",
+                  "battle",
+                  "draw",
+                  "finetune"
+                ],
+                "additionalProperties": false
+              },
+              "battleDiceItem": {
+                "type": "string"
+              },
+              "finetuneVp": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "aidVp": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "suitItem": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "burnOrder": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "refreshOrder": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "items",
+              "startItems",
+              "maxItems",
+              "refreshPerTurn",
+              "actionItems",
+              "battleDiceItem",
+              "finetuneVp",
+              "aidVp",
+              "suitItem",
+              "burnOrder",
+              "refreshOrder"
+            ],
+            "additionalProperties": false
+          },
+          "summary": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "short",
+          "color",
+          "warriors"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "factions"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "__schema0": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "ruledBy": {
+              "type": "string",
+              "enum": [
+                "self",
+                "rival",
+                "none",
+                "anyone"
+              ]
+            }
+          },
+          "required": [
+            "ruledBy"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "has": {
+              "type": "string",
+              "enum": [
+                "warrior",
+                "building",
+                "token",
+                "any"
+              ]
+            },
+            "of": {
+              "type": "string",
+              "enum": [
+                "self",
+                "rival",
+                "rivalArmy",
+                "any"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "has",
+            "of"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "terrain": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "terrain"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "supply": {
+              "type": "string",
+              "enum": [
+                "warriors",
+                "buildings",
+                "tokens"
+              ]
+            },
+            "min": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "supply"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "neighbor": {
+              "$ref": "#/$defs/__schema0"
+            }
+          },
+          "required": [
+            "neighbor"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "all": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema0"
+              }
+            }
+          },
+          "required": [
+            "all"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "any": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema0"
+              }
+            }
+          },
+          "required": [
+            "any"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "not": {
+              "$ref": "#/$defs/__schema0"
+            }
+          },
+          "required": [
+            "not"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "corner": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "corner"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "__schema1": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "count": {
+              "type": "string",
+              "const": "nodes"
+            },
+            "where": {
+              "$ref": "#/$defs/__schema0"
+            }
+          },
+          "required": [
+            "count",
+            "where"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "stat": {
+              "type": "string",
+              "enum": [
+                "battlesWon",
+                "vp",
+                "hand",
+                "warriorsSupply",
+                "buildingsSupply",
+                "tokensSupply",
+                "buildingsPlaced",
+                "tokensPlaced",
+                "items",
+                "turn"
+              ]
+            }
+          },
+          "required": [
+            "stat"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "rivalsAt": {
+              "type": "string",
+              "const": "pawn"
+            }
+          },
+          "required": [
+            "rivalsAt"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "ref": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ref"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "div": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/__schema1"
+                },
+                {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "div"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "mul": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/__schema1"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "mul"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "sum": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema1"
+              }
+            }
+          },
+          "required": [
+            "sum"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema1"
+              }
+            }
+          },
+          "required": [
+            "min"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "max": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/__schema1"
+              }
+            }
+          },
+          "required": [
+            "max"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "table": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "of": {
+              "$ref": "#/$defs/__schema1"
+            }
+          },
+          "required": [
+            "table",
+            "of"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

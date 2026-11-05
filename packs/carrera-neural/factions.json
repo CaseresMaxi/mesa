@@ -1,0 +1,667 @@
+{
+  "$schema": "../../schemas/factions.schema.json",
+  "factions": [
+    {
+      "id": "google",
+      "name": "Google DeepMind",
+      "short": "Google",
+      "tagline": "La megacorporación: escala, nube propia y billetera infinita.",
+      "color": "#e0a82e",
+      "warriors": {
+        "count": 20,
+        "name": "ingenieros",
+        "singular": "ingeniero"
+      },
+      "building": {
+        "kind": "datacenter",
+        "name": "Datacenter",
+        "count": 6,
+        "vp": [
+          1,
+          2,
+          2,
+          3,
+          3,
+          4
+        ]
+      },
+      "actions": 3,
+      "recruit": null,
+      "move": {
+        "range": 1,
+        "needsRule": true
+      },
+      "battle": {
+        "maxDice": 3
+      },
+      "special": {
+        "name": "Adquirir",
+        "hint": "Elegí un mercado que lideres con ingenieros y rivales: comprás 1 agente del rival más fuerte.",
+        "requires": [
+          {
+            "cond": {
+              "ruledBy": "self"
+            },
+            "error": "Tenés que liderar el mercado"
+          },
+          {
+            "cond": {
+              "supply": "warriors"
+            },
+            "error": "No quedan ingenieros en la reserva"
+          },
+          {
+            "cond": {
+              "has": "warrior",
+              "of": "rivalArmy"
+            },
+            "error": "No hay agentes rivales para adquirir"
+          }
+        ],
+        "effects": [
+          {
+            "do": "convertWarrior",
+            "log": "Adquirir: compra un agente de {victim} en {node}."
+          }
+        ]
+      },
+      "setup": [
+        {
+          "at": "corner",
+          "warriors": 3
+        },
+        {
+          "at": "cornerNeighbors",
+          "warriors": 1
+        },
+        {
+          "at": "corner",
+          "building": true
+        }
+      ],
+      "onTurnStart": [
+        {
+          "do": "placeWarriors",
+          "where": {
+            "has": "building",
+            "of": "self"
+          },
+          "amount": 1,
+          "log": "Planning — Autoescalado: +{n} ingenieros en los datacenters."
+        }
+      ],
+      "onClose": [
+        {
+          "id": "monopolio",
+          "vars": {
+            "ruled": {
+              "count": "nodes",
+              "where": {
+                "ruledBy": "self"
+              }
+            }
+          },
+          "vp": {
+            "div": [
+              {
+                "ref": "ruled"
+              },
+              3
+            ]
+          },
+          "why": "monopolio en {ruled} mercados (1 PV cada 3)"
+        }
+      ],
+      "summary": [
+        "Planning — Autoescalado: +1 ingeniero en cada mercado con datacenter.",
+        "No contrata: crece sola desde sus datacenters.",
+        "Construir datacenters da PV (1·2·2·3·3·4).",
+        "Adquirir (1/turno): en un mercado que lidera, cambia 1 agente rival por uno propio.",
+        "Cierre — Monopolio: +1 PV cada 3 mercados que lidera."
+      ]
+    },
+    {
+      "id": "meta",
+      "name": "Meta AI",
+      "short": "Meta",
+      "tagline": "Pesos abiertos para todos: que la comunidad haga el resto.",
+      "color": "#3b6fb6",
+      "warriors": {
+        "count": 12,
+        "name": "contribuidores",
+        "singular": "contribuidor"
+      },
+      "building": {
+        "kind": "repo",
+        "name": "Repositorio",
+        "count": 3,
+        "vp": [
+          1,
+          2,
+          2
+        ]
+      },
+      "actions": 3,
+      "recruit": {
+        "amount": 2,
+        "requires": [
+          {
+            "cond": {
+              "has": "building",
+              "of": "self"
+            },
+            "error": "Necesitás un repositorio propio en el mercado"
+          }
+        ]
+      },
+      "move": {
+        "range": 2,
+        "needsRule": true
+      },
+      "battle": {
+        "maxDice": 3
+      },
+      "special": {
+        "name": "Forkear",
+        "hint": "Elegí un mercado con un contribuidor tuyo y una estructura o lanzamiento rival: +1 PV.",
+        "requires": [
+          {
+            "cond": {
+              "any": [
+                {
+                  "has": "building",
+                  "of": "rival"
+                },
+                {
+                  "has": "token",
+                  "of": "rival"
+                }
+              ]
+            },
+            "error": "Necesitás una estructura o lanzamiento rival en el mercado"
+          }
+        ],
+        "effects": [
+          {
+            "do": "log",
+            "text": "Forkear: forkea el trabajo rival en {node}."
+          },
+          {
+            "do": "gainVp",
+            "amount": 1,
+            "why": "fork"
+          }
+        ]
+      },
+      "setup": [
+        {
+          "at": "corner",
+          "warriors": 4,
+          "building": true
+        }
+      ],
+      "onClose": [
+        {
+          "id": "estrellas",
+          "vars": {
+            "n": {
+              "count": "nodes",
+              "where": {
+                "all": [
+                  {
+                    "ruledBy": "self"
+                  },
+                  {
+                    "has": "building",
+                    "of": "self"
+                  }
+                ]
+              }
+            }
+          },
+          "vp": {
+            "ref": "n"
+          },
+          "why": "{n} repositorios con estrellas"
+        }
+      ],
+      "summary": [
+        "Viral: despliega hasta 2 conexiones por acción.",
+        "Contratar: +2 contribuidores en un mercado con repositorio.",
+        "Construir repositorios da PV (1·2·2).",
+        "Forkear (1/turno): junto a una estructura o lanzamiento rival, +1 PV.",
+        "Cierre — Estrellas: +1 PV por repositorio en mercado que lidera."
+      ]
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "short": "Anthropic",
+      "tagline": "Seguridad primero: red teaming, auditorías y constitución.",
+      "color": "#c4532b",
+      "warriors": {
+        "count": 12,
+        "name": "auditores",
+        "singular": "auditor"
+      },
+      "building": {
+        "kind": "laboratorio",
+        "name": "Laboratorio",
+        "count": 4,
+        "vp": [
+          1,
+          2,
+          2,
+          3
+        ]
+      },
+      "actions": 3,
+      "recruit": {
+        "amount": 2,
+        "requires": [
+          {
+            "cond": {
+              "has": "building",
+              "of": "self"
+            },
+            "error": "Necesitás un laboratorio propio en el mercado"
+          }
+        ]
+      },
+      "move": {
+        "range": 1,
+        "needsRule": true
+      },
+      "battle": {
+        "maxDice": 3,
+        "free": true,
+        "defenseBonus": 1,
+        "vpPerWarriorKill": 1
+      },
+      "setup": [
+        {
+          "at": "corner",
+          "warriors": 4,
+          "building": true
+        }
+      ],
+      "onClose": [
+        {
+          "id": "benchmark",
+          "vp": {
+            "min": [
+              {
+                "stat": "battlesWon"
+              },
+              1
+            ]
+          },
+          "why": "benchmark ganado este turno"
+        },
+        {
+          "id": "constitucion",
+          "vars": {
+            "safe": {
+              "count": "nodes",
+              "where": {
+                "all": [
+                  {
+                    "ruledBy": "self"
+                  },
+                  {
+                    "has": "building",
+                    "of": "self"
+                  }
+                ]
+              }
+            }
+          },
+          "vp": {
+            "div": [
+              {
+                "ref": "safe"
+              },
+              3
+            ]
+          },
+          "why": "{safe} laboratorios en mercados seguros (1 PV cada 3)"
+        }
+      ],
+      "summary": [
+        "Red team: al defender con auditores, +1 punto de benchmark.",
+        "Auditoría: un benchmark gratis por turno.",
+        "Hallazgo: +1 PV por agente rival eliminado. Cierre: +1 PV si ganó un benchmark.",
+        "Contratar: +2 auditores en mercado con laboratorio (PV 1·2·2·3).",
+        "Cierre — Constitución: +1 PV cada 3 mercados que lidera con laboratorio."
+      ]
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "short": "OpenAI",
+      "tagline": "Lanzar primero, iterar después: demos, hype y velocidad.",
+      "color": "#10a37f",
+      "warriors": {
+        "count": 8,
+        "name": "investigadores",
+        "singular": "investigador"
+      },
+      "token": {
+        "kind": "demo",
+        "name": "Lanzamiento",
+        "count": 8,
+        "requires": [
+          {
+            "cond": {
+              "any": [
+                {
+                  "has": "warrior",
+                  "of": "self"
+                },
+                {
+                  "neighbor": {
+                    "has": "token",
+                    "of": "self"
+                  }
+                }
+              ]
+            },
+            "error": "Necesitás un investigador ahí o un lanzamiento vecino"
+          }
+        ]
+      },
+      "actions": 3,
+      "recruit": {
+        "amount": 1,
+        "requires": [
+          {
+            "cond": {
+              "has": "token",
+              "of": "self"
+            },
+            "error": "Necesitás un lanzamiento en el mercado"
+          }
+        ]
+      },
+      "move": {
+        "range": 1,
+        "needsRule": false
+      },
+      "battle": {
+        "maxDice": 2
+      },
+      "setup": [
+        {
+          "at": "corner",
+          "warriors": 2,
+          "token": true
+        }
+      ],
+      "onClose": [
+        {
+          "id": "usuarios",
+          "vars": {
+            "n": {
+              "count": "nodes",
+              "where": {
+                "has": "token",
+                "of": "self"
+              }
+            }
+          },
+          "vp": {
+            "table": [
+              0,
+              1,
+              2,
+              2,
+              3,
+              3,
+              4,
+              5,
+              6
+            ],
+            "of": {
+              "ref": "n"
+            }
+          },
+          "why": "{n} lanzamientos con usuarios"
+        }
+      ],
+      "summary": [
+        "Pivotar: despliega sin necesitar liderar.",
+        "Lanzar: en un mercado con investigador o vecino a un lanzamiento (boca a boca).",
+        "Contratar: +1 investigador en un mercado con lanzamiento.",
+        "Cierre — Usuarios activos: PV según lanzamientos (0·1·2·2·3·3·4·5·6).",
+        "Equipo enfocado: compite con máximo 2 dados."
+      ]
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "short": "DeepSeek",
+      "tagline": "Los laboratorios chinos: hacen más con mucho menos.",
+      "color": "#6a5acd",
+      "warriors": {
+        "count": 14,
+        "name": "ingenieros",
+        "singular": "ingeniero"
+      },
+      "building": {
+        "kind": "cluster",
+        "name": "Clúster",
+        "count": 4,
+        "vp": [
+          1,
+          1,
+          2,
+          2
+        ]
+      },
+      "actions": 3,
+      "recruit": {
+        "amount": 2,
+        "requires": [
+          {
+            "cond": {
+              "has": "building",
+              "of": "self"
+            },
+            "error": "Necesitás un clúster propio en el mercado"
+          }
+        ]
+      },
+      "move": {
+        "range": 1,
+        "needsRule": true
+      },
+      "battle": {
+        "maxDice": 3
+      },
+      "anyCard": true,
+      "setup": [
+        {
+          "at": "corner",
+          "warriors": 4,
+          "building": true
+        }
+      ],
+      "onClose": [
+        {
+          "id": "disputados",
+          "vars": {
+            "contested": {
+              "count": "nodes",
+              "where": {
+                "all": [
+                  {
+                    "has": "warrior",
+                    "of": "self"
+                  },
+                  {
+                    "has": "any",
+                    "of": "rival"
+                  }
+                ]
+              }
+            }
+          },
+          "vp": {
+            "div": [
+              {
+                "ref": "contested"
+              },
+              3
+            ]
+          },
+          "why": "{contested} mercados disputados (1 PV cada 3)"
+        },
+        {
+          "id": "precio-bajo",
+          "vars": {
+            "led": {
+              "count": "nodes",
+              "where": {
+                "all": [
+                  {
+                    "ruledBy": "self"
+                  },
+                  {
+                    "has": "building",
+                    "of": "self"
+                  }
+                ]
+              }
+            }
+          },
+          "vp": {
+            "ref": "led"
+          },
+          "why": "{led} clústers en mercados que lidera"
+        }
+      ],
+      "summary": [
+        "Eficiencia: cualquier carta paga en cualquier mercado.",
+        "Contratar: +2 ingenieros en un mercado con clúster.",
+        "Construir clústers da PV (1·1·2·2).",
+        "Cierre — Precio bajo: +1 PV cada 3 mercados disputados con rivales y +1 por clúster en mercado que lidera."
+      ]
+    },
+    {
+      "id": "redditor",
+      "name": "El Redditor",
+      "short": "Redditor",
+      "tagline": "Un freaki de foro con un modelo local que entrenó en su sótano.",
+      "color": "#c2448f",
+      "archetype": "nomad",
+      "warriors": {
+        "count": 1,
+        "name": "modelo local",
+        "singular": "modelo local"
+      },
+      "actions": 0,
+      "move": {
+        "range": 1,
+        "needsRule": false
+      },
+      "battle": {
+        "maxDice": 3
+      },
+      "special": {
+        "name": "Ayudar",
+        "hint": "Regalá una carta a un rival que esté en tu mercado: +2 PV de karma (quema un componente)."
+      },
+      "setup": [
+        {
+          "at": "center",
+          "warriors": 1
+        }
+      ],
+      "onClose": [
+        {
+          "id": "drama",
+          "vars": {
+            "n": {
+              "rivalsAt": "pawn"
+            }
+          },
+          "vp": {
+            "ref": "n"
+          },
+          "why": "drama en el hilo: {n} rival(es) en su mercado"
+        }
+      ],
+      "nomad": {
+        "items": [
+          {
+            "id": "cafe",
+            "name": "Café",
+            "verb": "Moverse",
+            "hint": "Mové tu modelo local a un mercado vecino."
+          },
+          {
+            "id": "gpu",
+            "name": "GPU usada",
+            "verb": "Benchmark",
+            "hint": "Competí contra un rival en tu mercado (1 dado por GPU, máx. 3)."
+          },
+          {
+            "id": "dataset",
+            "name": "Dataset",
+            "verb": "Scrapear",
+            "hint": "Robá una carta del mazo."
+          },
+          {
+            "id": "teclado",
+            "name": "Teclado mecánico",
+            "verb": "Fine-tunear",
+            "hint": "Pagá una carta del mercado: +1 componente y +2 PV."
+          }
+        ],
+        "startItems": [
+          "cafe",
+          "cafe",
+          "gpu",
+          "dataset",
+          "teclado"
+        ],
+        "maxItems": 8,
+        "refreshPerTurn": 3,
+        "actionItems": {
+          "move": "cafe",
+          "battle": "gpu",
+          "draw": "dataset",
+          "finetune": "teclado"
+        },
+        "battleDiceItem": "gpu",
+        "finetuneVp": 2,
+        "aidVp": 2,
+        "suitItem": {
+          "datos": "dataset",
+          "computo": "gpu",
+          "talento": "teclado",
+          "hype": "cafe"
+        },
+        "burnOrder": [
+          "dataset",
+          "cafe",
+          "teclado",
+          "gpu"
+        ],
+        "refreshOrder": [
+          "cafe",
+          "gpu",
+          "teclado",
+          "dataset"
+        ]
+      },
+      "summary": [
+        "Lobo solitario: un solo peón. No lidera mercados y no se lo puede eliminar.",
+        "Cada acción quema un componente: Café mueve, GPU compite, Dataset scrapea (roba carta), Teclado fine-tunea.",
+        "Fine-tunear: pagá una carta del mercado → componente nuevo y +2 PV.",
+        "Ayudar (1/turno): regalá una carta a un rival en tu mercado, +2 PV de karma.",
+        "Planning — Dormir: recupera 3. Cierre — Drama: +1 PV por rival en su mercado."
+      ]
+    }
+  ]
+}

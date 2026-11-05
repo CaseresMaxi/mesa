@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "victoryVp": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "handLimit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "startingHand": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "drawPerTurn": {
+      "default": 1,
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "battle": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "hitOn": {
+          "default": 4,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "undefendedBonus": {
+          "default": 1,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "vpPerStructure": {
+          "default": 1,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "effort": {
+      "default": null,
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "suit": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "suit"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "logLimit": {
+      "default": 300,
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 9007199254740991
+    },
+    "terms": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "node": {
+          "default": "nodo",
+          "type": "string"
+        },
+        "nodes": {
+          "default": "nodos",
+          "type": "string"
+        },
+        "vp": {
+          "default": "PV",
+          "type": "string"
+        },
+        "turnStart": {
+          "default": "inicio",
+          "type": "string"
+        },
+        "actions": {
+          "default": "acciones",
+          "type": "string"
+        },
+        "close": {
+          "default": "cierre",
+          "type": "string"
+        },
+        "battle": {
+          "default": "batalla",
+          "type": "string"
+        },
+        "move": {
+          "default": "mover",
+          "type": "string"
+        },
+        "recruit": {
+          "default": "reclutar",
+          "type": "string"
+        },
+        "build": {
+          "default": "construir",
+          "type": "string"
+        },
+        "token": {
+          "default": "ficha",
+          "type": "string"
+        },
+        "effort": {
+          "default": "esfuerzo",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "texts": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "victoryVp",
+    "handLimit",
+    "startingHand"
+  ],
+  "additionalProperties": false
+}

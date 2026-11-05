@@ -1,0 +1,10 @@
+{
+  "$schema": "../../schemas/pack.schema.json",
+  "id": "carrera-neural",
+  "name": "Carrera Neural",
+  "version": "0.1.0",
+  "description": "Control de área asimétrico: laboratorios de IA compiten por liderar los mercados (parodia de fans, port del juego de root-3d).",
+  "language": "es",
+  "players": { "min": 2, "max": 4 },
+  "balance": { "games": 300, "factionsPerGame": 4, "minWinRate": 0.1, "maxWinRate": 0.475, "maxAvgTurns": 60 }
+}

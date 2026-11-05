@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "format": {
+      "type": "string",
+      "const": "mesa-batch"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "pack": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "createdAt": {
+      "type": "string"
+    },
+    "notes": {
+      "default": "",
+      "type": "string"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "const": "patch"
+              },
+              "title": {
+                "type": "string"
+              },
+              "note": {
+                "default": "",
+                "type": "string"
+              },
+              "ops": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "const": "replace"
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "value": {},
+                        "from": {}
+                      },
+                      "required": [
+                        "op",
+                        "path",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "const": "add"
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "value": {}
+                      },
+                      "required": [
+                        "op",
+                        "path",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "op": {
+                          "type": "string",
+                          "const": "remove"
+                        },
+                        "path": {
+                          "type": "string"
+                        },
+                        "from": {}
+                      },
+                      "required": [
+                        "op",
+                        "path"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "status": {
+                "default": "pending",
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "applied",
+                  "rejected"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title",
+              "ops"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "const": "intent"
+              },
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "targets": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "constraints": {
+                "default": [],
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "verify": {
+                "default": [
+                  "validate"
+                ],
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "validate",
+                    "sim",
+                    "assets",
+                    "visual"
+                  ]
+                }
+              },
+              "status": {
+                "default": "pending",
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "applied",
+                  "rejected"
+                ]
+              },
+              "result": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "kind",
+              "title",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "format",
+    "version",
+    "pack",
+    "title",
+    "createdAt",
+    "items"
+  ],
+  "additionalProperties": false
+}

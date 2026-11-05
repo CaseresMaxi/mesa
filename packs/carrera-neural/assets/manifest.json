@@ -1,0 +1,67 @@
+{
+  "$schema": "../../../schemas/assets.schema.json",
+  "style": {
+    "ink": "#2b2118",
+    "paper": "#f4ead2",
+    "roughness": 1.1
+  },
+  "auto": true,
+  "entries": [
+    {
+      "id": "warrior-google",
+      "category": "Guerreros",
+      "recipe": "warrior",
+      "params": {
+        "drawer": "character:google"
+      }
+    },
+    {
+      "id": "warrior-meta",
+      "category": "Guerreros",
+      "recipe": "warrior",
+      "params": {
+        "drawer": "character:meta"
+      }
+    },
+    {
+      "id": "warrior-anthropic",
+      "category": "Guerreros",
+      "recipe": "warrior",
+      "params": {
+        "drawer": "character:anthropic"
+      }
+    },
+    {
+      "id": "warrior-openai",
+      "category": "Guerreros",
+      "recipe": "warrior",
+      "params": {
+        "drawer": "character:openai"
+      }
+    },
+    {
+      "id": "warrior-deepseek",
+      "category": "Guerreros",
+      "recipe": "warrior",
+      "params": {
+        "drawer": "character:deepseek"
+      }
+    },
+    {
+      "id": "warrior-redditor",
+      "category": "Guerreros",
+      "recipe": "warrior",
+      "params": {
+        "drawer": "character:redditor"
+      }
+    },
+    {
+      "id": "card-back",
+      "category": "Cartas",
+      "recipe": "card-back",
+      "params": {
+        "title": "Carrera Neural"
+      }
+    }
+  ]
+}
