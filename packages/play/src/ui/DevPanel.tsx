@@ -6,7 +6,7 @@ import { replay, useSession, type SaveFile } from '../session.ts';
 /** Herramientas de desarrollo: estado, moves legales, historial, bots, saves y problemas del pack. */
 export function DevPanel() {
   const st = useSession();
-  const { engine, full, view, history, role, issues, usingDraft, godView, botDelay, botsPaused, set, send, restart, stepBot, exportSave, loadSave, seats } = st;
+  const { engine, full, view, history, role, issues, usingDraft, godView, botDelay, botsPaused, fxOn, fxSpeed, set, send, restart, stepBot, exportSave, loadSave, seats } = st;
   const [tab, setTab] = useState<'moves' | 'history' | 'state' | 'pack'>('moves');
   const [scrub, setScrub] = useState<number | null>(null);
   const s = full ?? view;
@@ -58,6 +58,21 @@ export function DevPanel() {
           </label>
         </div>
       )}
+      <div className="devrow">
+        <label>
+          <input type="checkbox" checked={fxOn} onChange={(e) => set({ fxOn: e.target.checked })} /> animar peleas
+        </label>
+        <label>
+          velocidad{' '}
+          <select value={fxSpeed} onChange={(e) => set({ fxSpeed: Number(e.target.value) })}>
+            {[0.25, 0.5, 1, 1.5, 2, 4].map((v) => (
+              <option key={v} value={v}>
+                ×{v}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       {authority && (
         <div className="devrow">
           <button onClick={restart}>↺ Reiniciar (misma semilla)</button>

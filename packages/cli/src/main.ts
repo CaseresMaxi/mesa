@@ -14,6 +14,11 @@ import {
   getPath,
   jsonSchemas,
   newBatch,
+  allClips,
+  battleClipName,
+  clipDuration,
+  sampleBattle,
+  stepApplies,
   parsePack,
   playGame,
   simulate,
@@ -50,6 +55,9 @@ Uso: pnpm mesa <comando> [args]
   batch apply <pack> <lote.json> [--dry]  aplica los patches pendientes del lote y lista las intenciones
   new <id> [--from <pack>] [--name "Nombre"]
                                           crea un pack nuevo (copia de otro o plantilla mínima)
+  fx <pack> [--clip nombre] [--outcome gana|pierde|empate|sin-defensa] [--games N]
+                                          animaciones de pelea: qué clip usa cada facción, línea de
+                                          tiempo de cada clip y cuánto tiempo de animación suma una partida
   schema                                  regenera schemas/*.schema.json
 `;
 
@@ -256,6 +264,51 @@ function cmdNew(id: string) {
   if (issues.length) console.log(formatIssues(issues));
 }
 
+function cmdFx(id: string) {
+  const { pack } = load(id);
+  const anim = pack.animations;
+  const clips = allClips(anim);
+  const outcome = (flag('outcome') ?? 'gana') as Parameters<typeof sampleBattle>[2];
+  console.log(`Animaciones de ${pack.pack.name}: ${anim.enabled ? 'activadas' : 'DESACTIVADAS'} · velocidad ×${anim.speed}`);
+  console.log('\nClip por facción atacante:');
+  for (const f of pack.factions) console.log(`  ${f.id.padEnd(14)} ${battleClipName(anim, f.id)}${anim.battle.byAttacker[f.id] ? '' : '  (default)'}`);
+  const names = flag('clip') ? [flag('clip')!] : Object.keys(clips);
+  const b = sampleBattle(pack.factions[0].id, pack.factions[1]?.id ?? pack.factions[0].id, outcome);
+  const W = 60;
+  for (const name of names) {
+    const c = clips[name];
+    if (!c) throw new Error(`Clip desconocido "${name}"`);
+    const total = clipDuration(c.steps);
+    console.log(`\n▶ ${name}${name in anim.clips ? '' : ' (incorporado)'} · ${total} ms · resultado de ejemplo: ${outcome}`);
+    if (c.description) console.log(`  ${c.description}`);
+    for (const s of c.steps) {
+      const a = Math.round((s.at / total) * W);
+      const w = Math.max(1, Math.round((s.dur / total) * W));
+      const on = stepApplies(s.when, b);
+      const bar = ' '.repeat(a) + (on ? '█' : '░').repeat(Math.min(w, W - a));
+      console.log(`  ${s.fx.padEnd(11)} |${bar.padEnd(W)}| ${String(s.at).padStart(5)}+${s.dur}${s.when === 'always' ? '' : ` ${s.when}`}${on ? '' : ' (no corre)'}`);
+    }
+  }
+  // ritmo: cuántas peleas hay por partida y cuánto tiempo de animación suman
+  const games = numFlag('games', 20);
+  const engine = createEngine(pack);
+  let battles = 0;
+  let ms = 0;
+  for (let g = 0; g < games; g++) {
+    const k = Math.min(4, pack.factions.length, pack.map.startCorners.length);
+    let seen = '';
+    // rota las facciones para que todas ataquen alguna vez
+    const fs = pack.factions.map((f) => f.id);
+    const pick = Array.from({ length: k }, (_, i) => fs[(g + i) % fs.length]);
+    playGame(engine, pick, 1000 + g, 3000, (s) => {
+      const lb = s.lastBattle;
+      const key = lb ? `${lb.seq}` : '';
+      if (lb && key !== seen) (seen = key), battles++, (ms += clipDuration(clips[battleClipName(anim, lb.attacker)].steps) / anim.speed);
+    });
+  }
+  console.log(`\nRitmo (${games} partidas de bots): ${(battles / games).toFixed(1)} peleas por partida · ${(ms / games / 1000).toFixed(1)} s de animación por partida (${(ms / Math.max(1, battles) / 1000).toFixed(2)} s por pelea)`);
+}
+
 function cmdSchema() {
   const dir = join(root, 'schemas');
   rmSync(dir, { recursive: true, force: true });
@@ -311,6 +364,9 @@ try {
       break;
     case 'new':
       cmdNew(a);
+      break;
+    case 'fx':
+      cmdFx(a);
       break;
     case 'schema':
       cmdSchema();

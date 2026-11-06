@@ -80,7 +80,7 @@ function combos(n: number, k: number): number[][] {
 }
 
 /** Juega una partida completa entre bots. Devuelve el estado final. */
-export function playGame(engine: Engine, factions: string[], seed: number, maxMoves = 3000): GameState {
+export function playGame(engine: Engine, factions: string[], seed: number, maxMoves = 3000, onMove?: (s: GameState) => void): GameState {
   let s = engine.createGame({ seed, players: factions.map((f) => ({ faction: f, name: f })) });
   const rand = lcg(seed);
   for (let i = 0; i < maxMoves && s.phase !== 'fin'; i++) {
@@ -88,6 +88,7 @@ export function playGame(engine: Engine, factions: string[], seed: number, maxMo
     const r = engine.applyMove(s, s.factions[engine.currentFaction(s)].seat, m);
     if (!r.ok) throw new Error(`Bot generó un move ilegal (${r.error}): ${JSON.stringify(m)}`);
     s = r.state;
+    onMove?.(s);
   }
   return s;
 }

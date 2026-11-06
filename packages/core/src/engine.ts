@@ -1,6 +1,6 @@
 import { rngOf } from './rng.ts';
 import type { Cond, Effect, Expr, Faction, GamePack, Requirement, ScoreRule } from './schema.ts';
-import type { Card, FactionId, FactionState, GameConfig, GameState, GameView, Move, MoveResult, NodeState, Piece } from './state.ts';
+import type { BattleResult, Card, FactionId, FactionState, GameConfig, GameState, GameView, Move, MoveResult, NodeState, Piece } from './state.ts';
 
 /**
  * Motor genérico de control de área, parametrizado por un GamePack.
@@ -470,7 +470,7 @@ export function createEngine(pack: GamePack) {
     startTurn(s);
   }
 
-  function removePieces(s: GameState, g: NodeState, victim: FactionId, hits: number, by: FactionId) {
+  function removePieces(s: GameState, g: NodeState, victim: FactionId, hits: number, by: FactionId): { warriors: number; structures: number; items?: number } {
     const vs = s.factions[victim];
     let warriors = 0;
     let structures = 0;
@@ -483,7 +483,7 @@ export function createEngine(pack: GamePack) {
       }
       if (burned + lost)
         log(s, victim, text('nomadHit', 'Recibe golpes: {burned} componente(s) quemado(s){lost}.', { burned, lost: lost ? `, ${lost} perdido(s)` : '' }));
-      return { warriors: 0, structures: 0 };
+      return { warriors: 0, structures: 0, items: burned + lost };
     }
     while (hits > 0 && warriorsAt(g, victim) > 0) {
       g.warriors[victim] = warriorsAt(g, victim) - 1;
@@ -526,7 +526,21 @@ export function createEngine(pack: GamePack) {
     let defenderHits = defenderRolls.filter((r) => r >= rules.battle.hitOn).length;
     if (defW === 0) attackerHits += rules.battle.undefendedBonus;
     if (defW > 0) defenderHits += FACTIONS[def].battle.defenseBonus;
-    s.lastBattle = { seq: s.moveCount, node, attacker: att, defender: def, attackerRolls, defenderRolls, attackerHits, defenderHits };
+    const battle: BattleResult = {
+      seq: s.moveCount,
+      node,
+      attacker: att,
+      defender: def,
+      attackerRolls,
+      defenderRolls,
+      attackerHits,
+      defenderHits,
+      attackerWarriors: attW,
+      defenderWarriors: defW,
+      attackerLosses: { warriors: 0, structures: 0 },
+      defenderLosses: { warriors: 0, structures: 0 },
+    };
+    s.lastBattle = battle;
     log(
       s,
       att,
@@ -542,6 +556,8 @@ export function createEngine(pack: GamePack) {
     );
     const dealt = removePieces(s, g, def, attackerHits, att);
     const taken = removePieces(s, g, att, defenderHits, def);
+    battle.defenderLosses = dealt;
+    battle.attackerLosses = taken;
     if (dealt.warriors + dealt.structures > taken.warriors + taken.structures) s.battlesWon++;
   }
 

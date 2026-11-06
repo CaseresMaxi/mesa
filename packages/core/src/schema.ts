@@ -324,6 +324,93 @@ export const Assets = z.strictObject({
   entries: z.array(AssetEntry).default([]),
 });
 
+// ───────────────────────── animaciones (peleas) ─────────────────────────
+
+/** Quién protagoniza un efecto: el bando atacante, el defensor o el nodo de la pelea. */
+export const FxWho = z.enum(['attacker', 'defender', 'node']);
+/** Cuándo corre un paso según el resultado de la pelea. */
+export const FxWhen = z.enum(['always', 'attackerWins', 'defenderWins', 'draw', 'undefended', 'attackerLost', 'defenderLost', 'noLosses']);
+export const FxEase = z.enum(['linear', 'in', 'out', 'inOut', 'back', 'bounce']);
+
+const stepBase = {
+  /** Inicio en ms desde el comienzo del clip. */
+  at: z.number().min(0).default(0),
+  /** Duración en ms. */
+  dur: z.number().min(1).default(400),
+  when: FxWhen.default('always'),
+  ease: FxEase.default('inOut'),
+};
+const ColorOrSide = z.union([Color, z.enum(['attacker', 'defender'])]);
+
+export const FxStep = z.discriminatedUnion('fx', [
+  /** Las figuras de un bando se lanzan hacia el rival y vuelven. */
+  z.strictObject({ fx: z.literal('lunge'), ...stepBase, who: FxWho.exclude(['node']).default('attacker'), dist: z.number().default(60) }),
+  /** Temblor. */
+  z.strictObject({ fx: z.literal('shake'), ...stepBase, who: FxWho.default('defender'), amp: z.number().default(10) }),
+  /** Destello de color sobre las figuras. */
+  z.strictObject({ fx: z.literal('flash'), ...stepBase, who: FxWho.default('defender'), color: ColorOrSide.default('#ffffff') }),
+  /** Proyectiles de un bando al otro: un asset del pack (ej. "token-google") o una forma dibujada. */
+  z.strictObject({
+    fx: z.literal('projectile'),
+    ...stepBase,
+    from: FxWho.exclude(['node']).default('attacker'),
+    asset: z.string().optional(),
+    shape: z.enum(['orb', 'bolt', 'arrow', 'star']).default('orb'),
+    color: ColorOrSide.default('attacker'),
+    count: z.number().int().min(1).max(12).default(3),
+    size: z.number().default(22),
+    /** Altura del arco (0 = recto). */
+    arc: z.number().default(60),
+  }),
+  /** Explosión de partículas. */
+  z.strictObject({
+    fx: z.literal('burst'),
+    ...stepBase,
+    who: FxWho.default('defender'),
+    color: ColorOrSide.default('#ffcf4a'),
+    count: z.number().int().min(1).max(60).default(16),
+    radius: z.number().default(90),
+  }),
+  /** Onda expansiva. */
+  z.strictObject({ fx: z.literal('ring'), ...stepBase, who: FxWho.default('node'), color: ColorOrSide.default('#ffffff'), radius: z.number().default(140) }),
+  /** Los dados ruedan y caen en las tiradas reales. */
+  z.strictObject({ fx: z.literal('dice'), ...stepBase, size: z.number().default(46) }),
+  /** Las bajas caen y se desvanecen, con "-N" flotando. */
+  z.strictObject({ fx: z.literal('casualties'), ...stepBase }),
+  /** Texto. Variables: {attacker} {defender} {ah} {dh} {aLoss} {dLoss} {node}. */
+  z.strictObject({
+    fx: z.literal('text'),
+    ...stepBase,
+    who: FxWho.default('node'),
+    text: z.string(),
+    color: ColorOrSide.default('#2b2118'),
+    size: z.number().default(44),
+  }),
+]);
+
+export const FxClip = z.strictObject({
+  description: z.string().default(''),
+  steps: z.array(FxStep).min(1),
+});
+
+export const Animations = z.strictObject({
+  $schema: z.string().optional(),
+  /** false = el cliente no anima las peleas (los jugadores también pueden apagarlas). */
+  enabled: z.boolean().default(true),
+  /** Multiplicador global de velocidad (2 = el doble de rápido). */
+  speed: z.number().min(0.1).max(10).default(1),
+  /** Biblioteca de clips con nombre. */
+  clips: z.record(Id, FxClip).default({}),
+  battle: z
+    .strictObject({
+      /** Clip por defecto para cualquier pelea (vacío = el clip incorporado "clasico"). */
+      default: z.string().default(''),
+      /** Clip según la facción atacante (pisa al default). */
+      byAttacker: z.record(Id, z.string()).default({}),
+    })
+    .prefault({}),
+});
+
 /** Pack en memoria. Ojo: `factions` es directamente la lista (en disco va envuelta en `{ factions: [...] }`). */
 export const GamePack = z.strictObject({
   pack: PackMeta,
@@ -332,6 +419,7 @@ export const GamePack = z.strictObject({
   cards: Cards,
   factions: z.array(Faction).min(1),
   assets: Assets,
+  animations: Animations.prefault({}),
 });
 
 export type PackMeta = z.infer<typeof PackMeta>;
@@ -347,6 +435,10 @@ export type Requirement = z.infer<typeof Requirement>;
 export type ScoreRule = z.infer<typeof ScoreRule>;
 export type Special = z.infer<typeof Special>;
 export type NomadDef = z.infer<typeof Nomad>;
+export type FxStep = z.infer<typeof FxStep>;
+export type FxClip = z.infer<typeof FxClip>;
+export type FxWhen = z.infer<typeof FxWhen>;
+export type Animations = z.infer<typeof Animations>;
 export type GamePack = z.infer<typeof GamePack>;
 /** Pack tal como está escrito en disco (con defaults sin aplicar). */
 export type GamePackInput = z.input<typeof GamePack>;
@@ -359,10 +451,11 @@ export const PACK_FILES = {
   cards: 'cards.json',
   factions: 'factions.json',
   assets: 'assets/manifest.json',
+  animations: 'animations.json',
 } as const;
 export type PackFileKey = keyof typeof PACK_FILES;
 
-export const SCHEMAS = { pack: PackMeta, rules: Rules, map: GameMap, cards: Cards, factions: Factions, assets: Assets } as const;
+export const SCHEMAS = { pack: PackMeta, rules: Rules, map: GameMap, cards: Cards, factions: Factions, assets: Assets, animations: Animations } as const;
 
 /** JSON Schema de cada archivo (para VS Code, el editor y la IA). */
 export function jsonSchemas(): Record<PackFileKey | 'batch', unknown> {

@@ -10,7 +10,8 @@
 - `pnpm dev` levanta editor + juego. Para probar en el navegador ver la skill `probar-web`.
 - `packs/<id>/`: un juego = datos (ver `docs/DSL.md`). `packs/carrera-neural` es el port del juego de `../root-3d`;
   `packages/core/test/parity.test.ts` garantiza que juega idéntico al motor original: no lo rompas.
-- Skills en `.claude/skills/`: nuevo-juego, mapas, assets, reglas, balance, aplicar-lote, probar-web.
+- Skills en `.claude/skills/`: nuevo-juego, mapas, assets, animaciones, reglas, balance, aplicar-lote, probar-web.
+- `packages/fx`: animaciones de pelea (runtime puro `frameAt` + componente `BattleFx`), datos en `packs/<id>/animations.json`.
 - Antes de terminar un cambio: `pnpm mesa validate <pack>` (si tocaste datos), `pnpm typecheck`, `pnpm test`.
 - Si cambiás `schema.ts`: `pnpm mesa schema` y actualizá `docs/DSL.md`.
 - Textos de UI, logs y docs en castellano rioplatense.

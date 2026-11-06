@@ -1,4 +1,5 @@
 import {
+  battleClip,
   createEngine,
   greedyBot,
   lcg,
@@ -10,7 +11,9 @@ import {
   type GameView,
   type Issue,
   type Move,
+  type BattleResult,
 } from '@mesa/core';
+import { totalDuration } from '@mesa/fx';
 import { joinRoom, type Room } from 'trystero';
 import { create } from 'zustand';
 
@@ -200,6 +203,9 @@ interface Store {
   botDelay: number;
   botsPaused: boolean;
   devOpen: boolean;
+  /** Animaciones de pelea (preferencia del jugador; el pack también las puede apagar). */
+  fxOn: boolean;
+  fxSpeed: number;
 
   setPack(input: GamePackInput, opts?: { draft?: boolean; replay?: boolean }): void;
   setName(n: string): void;
@@ -292,12 +298,32 @@ function godView(s: GameState, seat: number | null): GameView {
   return { ...structuredClone(s), deckCount: s.deck.length, handCounts: Object.fromEntries(s.order.map((f) => [f, s.factions[f].hand.length])), viewer: seat };
 }
 
+/** Clave de una pelea (para no animar dos veces la misma). */
+export const battleKey = (b: BattleResult | null) => (b ? `${b.seq}:${b.attacker}:${b.attackerRolls.join('')}:${b.defenderRolls.join('')}` : '');
+
+/** ¿Hay que animar esta pelea? (en vivo: la última pelea es del move que se acaba de jugar) */
+export function fxDuration(pack: GamePack | null, b: BattleResult | null): number {
+  const st = useSession.getState();
+  if (!pack || !b || !st.fxOn || !pack.animations.enabled) return 0;
+  return totalDuration(battleClip(pack, b.attacker)) / (pack.animations.speed * st.fxSpeed);
+}
+
+let heldKey = '';
+let holdUntil = 0;
+
 function scheduleBot(force = false) {
   if (botTimer) clearTimeout(botTimer);
   botTimer = null;
   const a = authority;
   const st = useSession.getState();
   if (!a?.state || a.state.phase === 'fin' || (st.botsPaused && !force)) return;
+  // si el último move fue una pelea, los bots esperan a que termine la animación
+  const k = battleKey(a.state.lastBattle);
+  if (k !== heldKey) {
+    heldKey = k;
+    if (a.state.lastBattle && a.state.moveCount - a.state.lastBattle.seq < 2) holdUntil = performance.now() + fxDuration(st.pack, a.state.lastBattle);
+  }
+  const wait = Math.max(0, holdUntil - performance.now());
   const seat = a.currentSeat()!;
   if (a.seats[seat].kind !== 'bot' && !force) return;
   botTimer = setTimeout(
@@ -309,7 +335,7 @@ function scheduleBot(force = false) {
       if (err) useSession.getState().toast_(`Bot: ${err}`);
       sync();
     },
-    force ? 0 : st.botDelay,
+    force ? 0 : Math.max(st.botDelay, wait),
   );
 }
 
@@ -388,9 +414,13 @@ export const useSession = create<Store>((set, get) => ({
   botDelay: 500,
   botsPaused: false,
   devOpen: false,
+  fxOn: localStorage.getItem('mesa.fx') !== 'off',
+  fxSpeed: Number(localStorage.getItem('mesa.fxSpeed')) || 1,
 
   set: (p) => {
     set(p);
+    if ('fxOn' in p) localStorage.setItem('mesa.fx', p.fxOn ? 'on' : 'off');
+    if ('fxSpeed' in p) localStorage.setItem('mesa.fxSpeed', String(p.fxSpeed));
     if ('godView' in p || 'botsPaused' in p || 'botDelay' in p) sync();
   },
   setName(name) {

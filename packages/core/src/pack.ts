@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { allClips, clipDuration } from './fx.ts';
 import { GamePack, PACK_FILES, type Cond, type Effect, type Expr, type GamePackInput, type PackFileKey } from './schema.ts';
 
 export interface Issue {
@@ -25,6 +26,7 @@ export function splitPack(pack: GamePackInput | GamePack): PackFiles {
     cards: pack.cards,
     factions: { $schema: '../../schemas/factions.schema.json', factions: pack.factions },
     assets: pack.assets,
+    animations: pack.animations,
   };
 }
 
@@ -160,6 +162,18 @@ export function semanticIssues(p: GamePack): Issue[] {
     });
   });
   if (p.factions.length < p.pack.players.min) err('/factions', 'Menos facciones que jugadores mínimos');
+  // animaciones
+  const clips = allClips(p.animations);
+  const clipRef = (path: string, name: string) => name && !clips[name] && err(path, `Clip desconocido "${name}" (hay: ${Object.keys(clips).join(', ')})`);
+  clipRef('/animations/battle/default', p.animations.battle.default);
+  for (const [f, name] of Object.entries(p.animations.battle.byAttacker)) {
+    if (!ids.has(f)) err(`/animations/battle/byAttacker/${f}`, `Facción desconocida "${f}"`);
+    clipRef(`/animations/battle/byAttacker/${f}`, name);
+  }
+  for (const [name, c] of Object.entries(p.animations.clips)) {
+    if (clipDuration(c.steps) > 6000) warn(`/animations/clips/${name}`, `Dura ${clipDuration(c.steps)} ms: más de 6 s frena mucho la partida`);
+    if (!c.steps.some((s) => s.fx === 'casualties')) warn(`/animations/clips/${name}`, 'No muestra las bajas (falta un paso "casualties")');
+  }
   return out;
 }
 

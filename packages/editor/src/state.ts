@@ -4,7 +4,7 @@ import { api } from './api.ts';
 
 /** Store mínimo del editor (sin dependencias): pack base (disco), borrador, historial, lote y selección. */
 
-export type Tab = 'mapa' | 'facciones' | 'cartas' | 'assets' | 'balance' | 'lote' | 'json';
+export type Tab = 'mapa' | 'facciones' | 'cartas' | 'assets' | 'animaciones' | 'balance' | 'lote' | 'json';
 export type Mode = 'directo' | 'lote';
 
 export interface EditorState {

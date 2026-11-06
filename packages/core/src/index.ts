@@ -7,3 +7,4 @@ export * from './paths.ts';
 export * from './sim.ts';
 export * from './mapgen.ts';
 export * from './batch.ts';
+export * from './fx.ts';

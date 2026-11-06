@@ -10,6 +10,7 @@ Un **pack** es un juego completo descrito con datos. Vive en `packs/<id>/`:
 | `cards.json` | `/cards` | palos (y comodines) y grupos del mazo |
 | `factions.json` | `/factions` (¡la lista directa!) | facciones con sus habilidades en DSL |
 | `assets/manifest.json` | `/assets` | estilo del arte y overrides de assets |
+| `animations.json` (opcional) | `/animations` | clips de animación de las peleas y cuál usa cada facción (ver skill `animaciones`) |
 
 Los JSON Schema están en `schemas/` (`pnpm mesa schema` los regenera desde `packages/core/src/schema.ts`,
 que es la fuente de verdad). Validá siempre con `pnpm mesa validate <pack>`.

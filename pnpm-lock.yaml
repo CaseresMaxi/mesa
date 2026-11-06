@@ -92,6 +92,9 @@ importers:
       '@mesa/core':
         specifier: workspace:*
         version: link:../core
+      '@mesa/fx':
+        specifier: workspace:*
+        version: link:../fx
       react:
         specifier: ^19.3.1
         version: 19.3.1
@@ -124,6 +127,28 @@ importers:
         specifier: ^8.3.6
         version: 8.3.6(@types/node@26.6.6)
 
+  packages/fx:
+    dependencies:
+      '@mesa/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
+      '@types/react':
+        specifier: ^19.3.0
+        version: 19.3.0
+      react:
+        specifier: ^19.3.1
+        version: 19.3.1
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+      vitest:
+        specifier: ^5.1.0
+        version: 5.1.0(@types/node@26.6.6)(vite@8.3.6(@types/node@26.6.6))
+
   packages/play:
     dependencies:
       '@fontsource/caveat':
@@ -138,6 +163,9 @@ importers:
       '@mesa/core':
         specifier: workspace:*
         version: link:../core
+      '@mesa/fx':
+        specifier: workspace:*
+        version: link:../fx
       react:
         specifier: ^19.3.1
         version: 19.3.1

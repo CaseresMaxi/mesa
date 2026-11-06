@@ -33,7 +33,7 @@ export function readPackFiles(dir: string): PackFiles {
   const out = {} as PackFiles;
   for (const [k, f] of Object.entries(PACK_FILES) as [PackFileKey, string][]) {
     const p = join(dir, f);
-    out[k] = existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : k === 'assets' ? { entries: [] } : undefined;
+    out[k] = existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : k === 'assets' ? { entries: [] } : k === 'animations' ? {} : undefined;
   }
   return out;
 }
@@ -53,7 +53,7 @@ export function savePack(dir: string, pack: GamePackInput): string[] {
   const before = existsSync(join(dir, 'pack.json')) ? readPackFiles(dir) : ({} as PackFiles);
   const written: string[] = [];
   for (const [k, f] of Object.entries(PACK_FILES) as [PackFileKey, string][]) {
-    if (JSON.stringify(before[k]) === JSON.stringify(files[k])) continue;
+    if (files[k] === undefined || JSON.stringify(before[k]) === JSON.stringify(files[k])) continue;
     writeJson(join(dir, f), files[k]);
     written.push(f);
   }

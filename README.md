@@ -18,6 +18,7 @@ pnpm mesa sim carrera-neural         # 300 partidas de bots → win rates, asien
 pnpm mesa sweep carrera-neural --path /factions/google/warriors/count --values 16,18,20
 pnpm mesa map analyze carrera-neural
 pnpm mesa assets carrera-neural      # SVGs en packs/carrera-neural/assets/generated
+pnpm mesa fx carrera-neural          # animaciones de pelea: clips, línea de tiempo y ritmo
 pnpm mesa doc carrera-neural         # reglas legibles generadas desde los datos
 pnpm mesa new mi-juego --from carrera-neural
 pnpm test && pnpm typecheck
@@ -34,6 +35,7 @@ En `.claude/skills/`:
 | `nuevo-juego` | arrancar un juego/variante desde una idea, otro pack o la plantilla |
 | `mapas` | generar, analizar y corregir mapas (simetría de esquinas, terrenos, cuellos de botella) |
 | `assets` | arte: recetas, librería de dibujos, overrides en el manifest, dibujos nuevos |
+| `animaciones` | animaciones de pelea: clips con efectos (embestida, proyectiles, dados, bajas…), clip por facción |
 | `reglas` | facciones y reglas con el DSL; extender el DSL cuando no alcanza |
 | `balance` | simulaciones, barridos, baseline, diagnóstico por fuentes de PV y por asiento |
 | `aplicar-lote` | procesar un lote del editor: patches + intenciones en lenguaje natural, verificar y reportar |
@@ -62,11 +64,12 @@ packages/
   core/     esquema zod (fuente de verdad) · motor genérico · DSL · validación · rutas por id/patches/diff
             · lotes · simulación de balance · generador y análisis de mapas · @mesa/core/node (fs)
   art/      assets SVG dibujados a mano (rough.js + acuarela), recetas + librería de dibujos de root-3d
+  fx/       animaciones de pelea: runtime puro (frameAt) + componente React BattleFx
   cli/      `pnpm mesa …`
-  editor/   Vite + React: mapa, facciones, cartas/reglas, assets, balance, lotes IA, JSON/diff, ▶ Probar
+  editor/   Vite + React: mapa, facciones, cartas/reglas, assets, animaciones, balance, lotes IA, JSON/diff, ▶ Probar
   play/     cliente web genérico: tablero, acciones desde legalMoves, bots, P2P, hot-reload, panel Dev, build por pack
   devserver/ API local /api (packs, borradores, lotes, reportes, archivos) + eventos en vivo (SSE)
-packs/<id>/ pack.json · rules.json · map.json · cards.json · factions.json · assets/manifest.json
+packs/<id>/ pack.json · rules.json · map.json · cards.json · factions.json · assets/manifest.json · animations.json
             · batches/ (lotes) · reports/ (simulaciones guardadas, ej. baseline.json)
 schemas/    JSON Schema de cada archivo (pnpm mesa schema)
 docs/       DSL.md (formato y DSL de reglas) · LOTES.md (formato de lotes)

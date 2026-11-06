@@ -1,0 +1,35 @@
+{
+  "$schema": "../../schemas/animations.schema.json",
+  "clips": {
+    "benchmark": {
+      "description": "Los modelos se miden: ráfaga de tokens, dados y el resultado del benchmark.",
+      "steps": [
+        { "fx": "text", "at": 0, "dur": 700, "text": "BENCHMARK", "size": 40, "color": "attacker" },
+        { "fx": "dice", "at": 100, "dur": 900 },
+        { "fx": "lunge", "at": 200, "dur": 400, "who": "attacker", "dist": 50, "ease": "back" },
+        { "fx": "projectile", "at": 300, "dur": 600, "from": "attacker", "shape": "bolt", "count": 5, "arc": 40 },
+        { "fx": "ring", "at": 750, "dur": 450, "who": "defender", "color": "attacker", "radius": 120 },
+        { "fx": "shake", "at": 750, "dur": 350, "who": "defender", "amp": 12, "when": "defenderLost" },
+        { "fx": "projectile", "at": 800, "dur": 500, "from": "defender", "shape": "orb", "count": 2, "arc": 60, "when": "attackerLost" },
+        { "fx": "flash", "at": 1150, "dur": 250, "who": "attacker", "color": "#ffffff", "when": "attackerLost" },
+        { "fx": "casualties", "at": 1200, "dur": 900 },
+        { "fx": "text", "at": 1250, "dur": 900, "text": "{ah} – {dh}", "size": 48 }
+      ]
+    },
+    "trolleo": {
+      "description": "El Redditor no pelea limpio: lluvia de estrellitas y burla.",
+      "steps": [
+        { "fx": "dice", "at": 0, "dur": 800 },
+        { "fx": "projectile", "at": 150, "dur": 700, "from": "attacker", "shape": "star", "count": 6, "arc": 90, "color": "attacker" },
+        { "fx": "burst", "at": 650, "dur": 600, "who": "defender", "color": "attacker", "count": 20 },
+        { "fx": "casualties", "at": 1000, "dur": 900 },
+        { "fx": "text", "at": 1000, "dur": 900, "text": "jaja", "size": 52, "color": "attacker", "who": "attacker", "when": "attackerWins" },
+        { "fx": "text", "at": 1000, "dur": 900, "text": "{ah} – {dh}", "size": 48, "when": "attackerLost" }
+      ]
+    }
+  },
+  "battle": {
+    "default": "benchmark",
+    "byAttacker": { "redditor": "trolleo" }
+  }
+}

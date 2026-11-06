@@ -1,0 +1,714 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "enabled": {
+      "default": true,
+      "type": "boolean"
+    },
+    "speed": {
+      "default": 1,
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 10
+    },
+    "clips": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9_-]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "default": "",
+            "type": "string"
+          },
+          "steps": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "lunge"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "who": {
+                      "default": "attacker",
+                      "type": "string",
+                      "enum": [
+                        "attacker",
+                        "defender"
+                      ]
+                    },
+                    "dist": {
+                      "default": 60,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "shake"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "who": {
+                      "default": "defender",
+                      "type": "string",
+                      "enum": [
+                        "attacker",
+                        "defender",
+                        "node"
+                      ]
+                    },
+                    "amp": {
+                      "default": 10,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "flash"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "who": {
+                      "default": "defender",
+                      "type": "string",
+                      "enum": [
+                        "attacker",
+                        "defender",
+                        "node"
+                      ]
+                    },
+                    "color": {
+                      "default": "#ffffff",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "attacker",
+                            "defender"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "projectile"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "from": {
+                      "default": "attacker",
+                      "type": "string",
+                      "enum": [
+                        "attacker",
+                        "defender"
+                      ]
+                    },
+                    "asset": {
+                      "type": "string"
+                    },
+                    "shape": {
+                      "default": "orb",
+                      "type": "string",
+                      "enum": [
+                        "orb",
+                        "bolt",
+                        "arrow",
+                        "star"
+                      ]
+                    },
+                    "color": {
+                      "default": "attacker",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "attacker",
+                            "defender"
+                          ]
+                        }
+                      ]
+                    },
+                    "count": {
+                      "default": 3,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 12
+                    },
+                    "size": {
+                      "default": 22,
+                      "type": "number"
+                    },
+                    "arc": {
+                      "default": 60,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "burst"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "who": {
+                      "default": "defender",
+                      "type": "string",
+                      "enum": [
+                        "attacker",
+                        "defender",
+                        "node"
+                      ]
+                    },
+                    "color": {
+                      "default": "#ffcf4a",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "attacker",
+                            "defender"
+                          ]
+                        }
+                      ]
+                    },
+                    "count": {
+                      "default": 16,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 60
+                    },
+                    "radius": {
+                      "default": 90,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "ring"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "who": {
+                      "default": "node",
+                      "type": "string",
+                      "enum": [
+                        "attacker",
+                        "defender",
+                        "node"
+                      ]
+                    },
+                    "color": {
+                      "default": "#ffffff",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "attacker",
+                            "defender"
+                          ]
+                        }
+                      ]
+                    },
+                    "radius": {
+                      "default": 140,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "dice"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "size": {
+                      "default": 46,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "casualties"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "fx"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "fx": {
+                      "type": "string",
+                      "const": "text"
+                    },
+                    "at": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "dur": {
+                      "default": 400,
+                      "type": "number",
+                      "minimum": 1
+                    },
+                    "when": {
+                      "default": "always",
+                      "type": "string",
+                      "enum": [
+                        "always",
+                        "attackerWins",
+                        "defenderWins",
+                        "draw",
+                        "undefended",
+                        "attackerLost",
+                        "defenderLost",
+                        "noLosses"
+                      ]
+                    },
+                    "ease": {
+                      "default": "inOut",
+                      "type": "string",
+                      "enum": [
+                        "linear",
+                        "in",
+                        "out",
+                        "inOut",
+                        "back",
+                        "bounce"
+                      ]
+                    },
+                    "who": {
+                      "default": "node",
+                      "type": "string",
+                      "enum": [
+                        "attacker",
+                        "defender",
+                        "node"
+                      ]
+                    },
+                    "text": {
+                      "type": "string"
+                    },
+                    "color": {
+                      "default": "#2b2118",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$"
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "attacker",
+                            "defender"
+                          ]
+                        }
+                      ]
+                    },
+                    "size": {
+                      "default": 44,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "fx",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "steps"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "battle": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "default": {
+          "default": "",
+          "type": "string"
+        },
+        "byAttacker": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]*$"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

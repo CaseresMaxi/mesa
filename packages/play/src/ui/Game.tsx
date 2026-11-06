@@ -7,7 +7,7 @@ import { Board } from './Board.tsx';
 import { DevPanel } from './DevPanel.tsx';
 
 export function Game() {
-  const { pack, engine, view, mySeat, canUndo, send, undo, role, seats, devOpen, set, leave } = useSession();
+  const { pack, engine, view, mySeat, canUndo, send, undo, role, seats, devOpen, fxOn, set, leave } = useSession();
   const [sel, setSel] = useState<Selection | null>(null);
   const [discard, setDiscard] = useState<number[]>([]);
   const [focus, setFocus] = useState<number | null>(null);
@@ -63,6 +63,11 @@ export function Game() {
         </span>
         <span className="grow" />
         {role !== 'local' && <span className="pill">{role === 'host' ? 'Host' : 'Conectado'}</span>}
+        {pack.animations.enabled && (
+          <button onClick={() => set({ fxOn: !fxOn })} title="Animaciones de las peleas">
+            🎬 <small>{fxOn ? 'anim.' : 'sin anim.'}</small>
+          </button>
+        )}
         <button onClick={() => set({ devOpen: !devOpen })} title="Panel de desarrollo (tecla `)">🛠 Dev</button>
         <button onClick={leave}>Salir</button>
       </header>

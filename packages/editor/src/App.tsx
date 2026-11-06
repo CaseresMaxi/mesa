@@ -6,6 +6,7 @@ import { MapTab } from './tabs/MapTab.tsx';
 import { FactionsTab } from './tabs/FactionsTab.tsx';
 import { CardsTab } from './tabs/CardsTab.tsx';
 import { AssetsTab } from './tabs/AssetsTab.tsx';
+import { AnimationsTab } from './tabs/AnimationsTab.tsx';
 import { BalanceTab } from './tabs/BalanceTab.tsx';
 import { BatchTab } from './tabs/BatchTab.tsx';
 import { JsonTab } from './tabs/JsonTab.tsx';
@@ -16,6 +17,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'facciones', label: '⚑ Facciones' },
   { id: 'cartas', label: '🃏 Cartas y reglas' },
   { id: 'assets', label: '🎨 Assets' },
+  { id: 'animaciones', label: '🎬 Animaciones' },
   { id: 'balance', label: '⚖️ Balance' },
   { id: 'lote', label: '🤖 Lote IA' },
   { id: 'json', label: '{ } JSON' },
@@ -32,6 +34,7 @@ export function goToPath(path: string) {
     const f = fs.find((x) => x.id === seg[1]) ?? fs[Number(seg[1])];
     set({ tab: 'facciones', selFaction: f?.id ?? s.selFaction });
   } else if (seg[0] === 'assets') set({ tab: 'assets' });
+  else if (seg[0] === 'animations') set({ tab: 'animaciones' });
   else set({ tab: 'cartas' });
 }
 
@@ -158,6 +161,7 @@ export function App() {
             {tab === 'facciones' && <FactionsTab />}
             {tab === 'cartas' && <CardsTab />}
             {tab === 'assets' && <AssetsTab />}
+            {tab === 'animaciones' && <AnimationsTab />}
             {tab === 'balance' && <BalanceTab />}
             {tab === 'lote' && <BatchTab />}
             {tab === 'json' && <JsonTab />}
